@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_64fb9266e444481f06796f00f247f405 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+    <div style="
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        width: 300px;
+        max-height: 75vh;
+        overflow-y: auto;
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px #888;
+        z-index: 9999;
+        font-family: Arial;
+    ">
+        <h3>Instruções da rota</h3>
+    <p><b>Iniciar trajeto</b><br>Rua Almirante Gonçalves — 80 metros</p><hr><p><b>Virar</b><br>Rua Piquiri — 156 metros</p><hr><p><b>Virar</b><br>Rua Brasílio Itiberê — 1838 metros</p><hr><p><b>Virar</b><br>Avenida Doutor Dario Lopes dos Santos — 604 metros</p><hr><p><b>Fim da rua</b><br>Rua Engenheiro Ostoja Roguski — 60 metros</p><hr><p><b>Continuar</b><br>Avenida Prefeito Maurício Fruet — 513 metros</p><hr><p><b>Chegada</b><br>Avenida Prefeito Maurício Fruet — 0 metros</p><hr></div>
+    
+            <div class="folium-map" id="map_64fb9266e444481f06796f00f247f405" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_64fb9266e444481f06796f00f247f405 = L.map(
+                "map_64fb9266e444481f06796f00f247f405",
+                {
+                    center: [-25.445, -49.26],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 13,
+  "zoomControl": false,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.zoom( { position: "topright" } ).addTo(map_64fb9266e444481f06796f00f247f405);
+
+            
+
+        
+    
+            var tile_layer_1b7691005ff6fefd4e0b5a95779782aa = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_1b7691005ff6fefd4e0b5a95779782aa.addTo(map_64fb9266e444481f06796f00f247f405);
+        
+    
+            var marker_f7e6934dc548d985193d358d3513ca9e = L.marker(
+                [-25.445, -49.26],
+                {
+}
+            ).addTo(map_64fb9266e444481f06796f00f247f405);
+        
+    
+            var icon_a210b420d2d7c0ad3c999c00d1fb45cd = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f9a11bbf9332fb4cffd7b37c31751601 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6b656e41a26dd5ca49348d8544ca842b = $(`<div id="html_6b656e41a26dd5ca49348d8544ca842b" style="width: 100.0%; height: 100.0%;">Centro de Curitiba</div>`)[0];
+                popup_f9a11bbf9332fb4cffd7b37c31751601.setContent(html_6b656e41a26dd5ca49348d8544ca842b);
+            
+        
+
+        marker_f7e6934dc548d985193d358d3513ca9e.bindPopup(popup_f9a11bbf9332fb4cffd7b37c31751601)
+        ;
+
+        
+    
+    
+            marker_f7e6934dc548d985193d358d3513ca9e.bindTooltip(
+                `<div>
+                     Partida
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_f7e6934dc548d985193d358d3513ca9e.setIcon(icon_a210b420d2d7c0ad3c999c00d1fb45cd);
+            
+    
+            var marker_c53653df25afc2ba0d27c9ae37f32f95 = L.marker(
+                [-25.442, -49.235],
+                {
+}
+            ).addTo(map_64fb9266e444481f06796f00f247f405);
+        
+    
+            var icon_7f2e141ff3c0dfd35cad9ba21fb26883 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d4beb34fce3d9da681d7182ed16c719c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a1db8dfc9aabc16269ffe8acb1d04745 = $(`<div id="html_a1db8dfc9aabc16269ffe8acb1d04745" style="width: 100.0%; height: 100.0%;">Batel, Curitiba</div>`)[0];
+                popup_d4beb34fce3d9da681d7182ed16c719c.setContent(html_a1db8dfc9aabc16269ffe8acb1d04745);
+            
+        
+
+        marker_c53653df25afc2ba0d27c9ae37f32f95.bindPopup(popup_d4beb34fce3d9da681d7182ed16c719c)
+        ;
+
+        
+    
+    
+            marker_c53653df25afc2ba0d27c9ae37f32f95.bindTooltip(
+                `<div>
+                     Chegada
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c53653df25afc2ba0d27c9ae37f32f95.setIcon(icon_7f2e141ff3c0dfd35cad9ba21fb26883);
+            
+    
+            var poly_line_05f4eb42ab360c00d73510d6283594a0 = L.polyline(
+                [[-25.44514, -49.259932], [-25.445427, -49.260658], [-25.445405, -49.260668], [-25.444198, -49.261251], [-25.444134, -49.261282], [-25.443685, -49.260106], [-25.443646, -49.260004], [-25.443606, -49.259899], [-25.443506, -49.259638], [-25.443478, -49.259565], [-25.443438, -49.25946], [-25.443403, -49.259367], [-25.443306, -49.259112], [-25.442994, -49.258295], [-25.442462, -49.256902], [-25.442446, -49.256861], [-25.442217, -49.256261], [-25.44213, -49.256032], [-25.44174, -49.25501], [-25.441487, -49.254347], [-25.441449, -49.254249], [-25.441313, -49.253891], [-25.441291, -49.253834], [-25.441278, -49.253801], [-25.441242, -49.253707], [-25.441172, -49.253523], [-25.440774, -49.252479], [-25.440738, -49.252386], [-25.440715, -49.252326], [-25.440656, -49.252167], [-25.440613, -49.252061], [-25.440176, -49.250975], [-25.439869, -49.250211], [-25.439742, -49.249896], [-25.439716, -49.249832], [-25.439661, -49.249694], [-25.439634, -49.249628], [-25.439588, -49.249514], [-25.439153, -49.24843], [-25.438771, -49.247481], [-25.438392, -49.246538], [-25.437924, -49.245376], [-25.437574, -49.244504], [-25.437737, -49.244149], [-25.438001, -49.243574], [-25.438114, -49.243313], [-25.438151, -49.243218], [-25.438187, -49.24311], [-25.438228, -49.242964], [-25.438467, -49.24207], [-25.438517, -49.241877], [-25.438804, -49.24077], [-25.438827, -49.240704], [-25.438856, -49.240642], [-25.438888, -49.240588], [-25.438926, -49.240533], [-25.439867, -49.239279], [-25.439933, -49.23919], [-25.439879, -49.239129], [-25.439665, -49.238886], [-25.439559, -49.238764], [-25.439509, -49.238633], [-25.43949, -49.238561], [-25.439475, -49.238468], [-25.439468, -49.23839], [-25.439467, -49.238324], [-25.439468, -49.238267], [-25.439475, -49.238194], [-25.439486, -49.238138], [-25.439507, -49.238066], [-25.439529, -49.23801], [-25.439561, -49.237953], [-25.439597, -49.2379], [-25.439642, -49.237845], [-25.439686, -49.237799], [-25.43974, -49.237752], [-25.440695, -49.237049], [-25.440878, -49.236911], [-25.441078, -49.236758], [-25.441397, -49.236504], [-25.441513, -49.236407], [-25.441599, -49.236326], [-25.441694, -49.236222], [-25.441775, -49.236115], [-25.441848, -49.236001], [-25.441911, -49.235885], [-25.44197, -49.235756], [-25.442017, -49.235617], [-25.442048, -49.235492], [-25.442072, -49.235365], [-25.442086, -49.235244], [-25.442105, -49.23501]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 6}
+            ).addTo(map_64fb9266e444481f06796f00f247f405);
+        
+    
+            map_64fb9266e444481f06796f00f247f405.fitBounds(
+                [[-25.44514, -49.259932], [-25.445427, -49.260658], [-25.445405, -49.260668], [-25.444198, -49.261251], [-25.444134, -49.261282], [-25.443685, -49.260106], [-25.443646, -49.260004], [-25.443606, -49.259899], [-25.443506, -49.259638], [-25.443478, -49.259565], [-25.443438, -49.25946], [-25.443403, -49.259367], [-25.443306, -49.259112], [-25.442994, -49.258295], [-25.442462, -49.256902], [-25.442446, -49.256861], [-25.442217, -49.256261], [-25.44213, -49.256032], [-25.44174, -49.25501], [-25.441487, -49.254347], [-25.441449, -49.254249], [-25.441313, -49.253891], [-25.441291, -49.253834], [-25.441278, -49.253801], [-25.441242, -49.253707], [-25.441172, -49.253523], [-25.440774, -49.252479], [-25.440738, -49.252386], [-25.440715, -49.252326], [-25.440656, -49.252167], [-25.440613, -49.252061], [-25.440176, -49.250975], [-25.439869, -49.250211], [-25.439742, -49.249896], [-25.439716, -49.249832], [-25.439661, -49.249694], [-25.439634, -49.249628], [-25.439588, -49.249514], [-25.439153, -49.24843], [-25.438771, -49.247481], [-25.438392, -49.246538], [-25.437924, -49.245376], [-25.437574, -49.244504], [-25.437737, -49.244149], [-25.438001, -49.243574], [-25.438114, -49.243313], [-25.438151, -49.243218], [-25.438187, -49.24311], [-25.438228, -49.242964], [-25.438467, -49.24207], [-25.438517, -49.241877], [-25.438804, -49.24077], [-25.438827, -49.240704], [-25.438856, -49.240642], [-25.438888, -49.240588], [-25.438926, -49.240533], [-25.439867, -49.239279], [-25.439933, -49.23919], [-25.439879, -49.239129], [-25.439665, -49.238886], [-25.439559, -49.238764], [-25.439509, -49.238633], [-25.43949, -49.238561], [-25.439475, -49.238468], [-25.439468, -49.23839], [-25.439467, -49.238324], [-25.439468, -49.238267], [-25.439475, -49.238194], [-25.439486, -49.238138], [-25.439507, -49.238066], [-25.439529, -49.23801], [-25.439561, -49.237953], [-25.439597, -49.2379], [-25.439642, -49.237845], [-25.439686, -49.237799], [-25.43974, -49.237752], [-25.440695, -49.237049], [-25.440878, -49.236911], [-25.441078, -49.236758], [-25.441397, -49.236504], [-25.441513, -49.236407], [-25.441599, -49.236326], [-25.441694, -49.236222], [-25.441775, -49.236115], [-25.441848, -49.236001], [-25.441911, -49.235885], [-25.44197, -49.235756], [-25.442017, -49.235617], [-25.442048, -49.235492], [-25.442072, -49.235365], [-25.442086, -49.235244], [-25.442105, -49.23501]],
+                {}
+            );
+        
+</script>
+</html>
