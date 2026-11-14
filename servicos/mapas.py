@@ -3,6 +3,7 @@ import folium
 import requests
 from html import escape
 from servicos.clima import consultar_clima_medio
+from datetime import datetime, timedelta
 
 
 def criar_mapa(origem=None, destino=None):
@@ -46,141 +47,118 @@ def criar_mapa(origem=None, destino=None):
         zoom_control="topright"
     )
 
-    
     # =====================================
     # INSTRUÇÕES DA ROTA
     # =====================================
 
     instrucoes_html = ""
-    primeira_instrucao = True
 
-    direcoes = {
-        "uturn": "Faça o retorno",
-        "sharp right": "bruscamente à direita",
-        "right": "à direita",
-        "slight right": "levemente à direita",
-        "straight": "em frente",
-        "slight left": "levemente à esquerda",
-        "left": "à esquerda",
-        "sharp left": "bruscamente à esquerda"
-    }
-
-    icones = {
-        "uturn": "↶",
-        "sharp right": "↱",
-        "right": "→",
-        "slight right": "↗",
-        "straight": "↑",
-        "slight left": "↖",
-        "left": "←",
-        "sharp left": "↰"
-    }
-
-    def formatar_distancia(metros):
-        if metros >= 1000:
-            return f"{metros / 1000:.1f}".replace(".", ",") + " km"
-        return f"{metros:.0f} m"
-
-    for trecho in rota["legs"]:
-        for passo in trecho["steps"]:
+    for indice, leg in enumerate(rota["legs"]):
+        for passo in leg["steps"]:
 
             manobra = passo["maneuver"]
+
             tipo = manobra.get("type", "")
             modificador = manobra.get("modifier", "")
 
-            rua = passo.get("name") or ""
-            distancia_passo = passo.get("distance", 0)
+            traducoes = {
+                "depart": "Inicie o trajeto",
+                "arrive": "Você chegou ao destino",
+                "turn": "Vire",
+                "new name": "Continue pela via",
+                "continue": "Continue em frente",
+                "merge": "Entre na via",
+                "on ramp": "Acesse a rampa",
+                "off ramp": "Saia pela rampa",
+                "fork": "Na bifurcação",
+                "end of road": "No final da via",
+                "roundabout": "Entre na rotatória",
+                "rotary": "Entre na rotatória",
+                "roundabout turn": "Na rotatória",
+                "notification": "Atenção",
+                "use lane": "Utilize a faixa indicada"
+            }
 
-            direcao = direcoes.get(modificador, "")
+            direcoes = {
+                "left": "à esquerda",
+                "right": "à direita",
+                "slight left": "levemente à esquerda",
+                "slight right": "levemente à direita",
+                "sharp left": "acentuadamente à esquerda",
+                "sharp right": "acentuadamente à direita",
+                "uturn": "faça o retorno",
+                "straight": "em frente"
+            }
 
-            if tipo == "depart":
-                acao = "Inicie o trajeto"
+            instrucao = traducoes.get(
+                tipo,
+                "Continue pela via"
+            )
 
-            elif tipo == "arrive":
-                acao = "Você chegou ao destino"
+            if tipo == "arrive":
+                instrucao = "Você chegou ao destino"
 
-            elif tipo == "turn":
-                acao = (
-                    direcao if modificador == "uturn"
-                    else f"Vire {direcao}" if direcao
-                    else "Faça a conversão"
+            elif tipo == "depart":
+                if modificador:
+                    instrucao += " " + direcoes.get(
+                        modificador,
+                        ""
+                    )
+
+            elif modificador:
+                instrucao += " " + direcoes.get(
+                    modificador,
+                    ""
                 )
 
-            elif tipo == "end of road":
-                acao = f"No fim da rua, vire {direcao}" if direcao else "Siga até o fim da rua"
-
-            elif tipo == "continue":
-                acao = f"Continue {direcao}" if direcao else "Siga em frente"
-
-            elif tipo == "new name":
-                acao = "Continue pela via"
-
-            elif tipo == "merge":
-                acao = "Incorpore-se à via"
-
-            elif tipo == "on ramp":
-                acao = "Acesse a alça de entrada"
-
-            elif tipo == "off ramp":
-                acao = "Pegue a saída"
-
-            elif tipo == "fork":
-                acao = f"Na bifurcação, siga {direcao}" if direcao else "Siga pela bifurcação"
-
-            elif tipo in ("roundabout", "rotary"):
-                acao = "Entre na rotatória"
-
-            elif tipo == "roundabout turn":
-                acao = f"Na rotatória, siga {direcao}" if direcao else "Siga pela rotatória"
-
-            elif tipo in ("exit roundabout", "exit rotary"):
-                acao = "Saia da rotatória"
-
-            else:
-                acao = "Continue o trajeto"
-
-            icone = icones.get(
-                modificador,
-                "◎" if tipo == "arrive" else "↑"
-            )
-
-            classe = "item-rota destaque" if primeira_instrucao else "item-rota"
-
-            etiqueta = (
-                '<small>INÍCIO DA ROTA</small>'
-                if primeira_instrucao else ""
-            )
-
-            primeira_instrucao = False
-
-            rua_html = (
-                f'<p class="detalhe-rota">{escape(rua)}</p>'
-                if rua else ""
-            )
-
-            distancia_html = (
-                f'<span class="distancia-rota">{formatar_distancia(distancia_passo)}</span>'
-                if distancia_passo > 0 else ""
-            )
+            distancia_passo = passo.get("distance", 0)
 
             instrucoes_html += f"""
-                <div class="{classe}">
-                    <div class="icone-rota">{icone}</div>
-
+                <div class="item-rota">
                     <div class="conteudo-rota">
-                        {etiqueta}
-                        <b>{escape(acao)}</b>
-                        {rua_html}
-                        {distancia_html}
+                        <b>{escape(instrucao)}</b>
+                        <span class="distancia-rota">
+                            {distancia_passo:.0f} metros
+                        </span>
                     </div>
                 </div>
             """
-
-
+    
+    
     # =====================================
-    # INFORMAÇÕES CLIMÁTICAS
+    # PREVISÃO GERAL DA VIAGEM
     # =====================================
 
+    horario_saida = datetime.now().astimezone()
+
+    horario_chegada = horario_saida + timedelta(
+        seconds=rota["duration"]
+    )
+
+    duracao_minutos = round(rota["duration"] / 60)
+    distancia_km = rota["distance"] / 1000
+
+    previsao_html = f"""
+        <div class="item-clima">
+
+            <p>🕒 Saída estimada:
+                <b>{horario_saida.strftime('%d/%m/%Y %H:%M')}</b>
+            </p>
+
+            <p>🏁 Chegada estimada:
+                <b>{horario_chegada.strftime('%d/%m/%Y %H:%M')}</b>
+            </p>
+
+            <p>🚗 Duração estimada:
+                <b>{duracao_minutos} minutos</b>
+            </p>
+
+            <p>📍 Distância total:
+                <b>{distancia_km:.2f} km</b>
+            </p>
+
+        </div>
+    """
     
     # =====================================
     # RESUMO CLIMÁTICO DA ROTA
@@ -427,6 +405,11 @@ def criar_mapa(origem=None, destino=None):
             🌤 Clima
         </button>
 
+        <button class="botao-mapa"
+                onclick="alternarPainel('painel-previsao')">
+            📊 Previsão
+        </button>
+
     </div>
 
     <!-- Painel de instruções -->
@@ -457,10 +440,24 @@ def criar_mapa(origem=None, destino=None):
 
     </div>
 
+    <!-- Painel de previsão -->
+    <div id="painel-previsao" class="painel-mapa">
+
+        <button class="fechar-painel"
+                onclick="fecharPaineis()">
+            ×
+        </button>
+
+        <h3>📊 Previsão da viagem</h3>
+
+        {previsao_html}
+
+    </div>
+
     <!-- Controle dos painéis -->
     <script>
 
-        function fecharPaineis() {{
+                function fecharPaineis() {{
 
             document.getElementById(
                 'painel-instrucoes'
@@ -468,6 +465,10 @@ def criar_mapa(origem=None, destino=None):
 
             document.getElementById(
                 'painel-clima'
+            ).style.display = 'none';
+
+            document.getElementById(
+                'painel-previsao'
             ).style.display = 'none';
 
         }}

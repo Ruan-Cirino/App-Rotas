@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_64fb9266e444481f06796f00f247f405 {
+                #map_585eef5ad9b92b63a72f2e89bbc4aee3 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -54,33 +54,383 @@
 <body>
     
     
-    <div style="
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        width: 300px;
-        max-height: 75vh;
-        overflow-y: auto;
-        background: white;
-        padding: 15px;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px #888;
-        z-index: 9999;
-        font-family: Arial;
-    ">
+    <style>
+
+        
+        
+        * {
+            box-sizing: border-box;
+        }
+
+        .controles-mapa {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 10000;
+            display: flex;
+            gap: 8px;
+            font-family: Arial, sans-serif;
+        }
+
+        .botao-mapa {
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            color: #222222;
+            padding: 10px 14px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .botao-mapa:hover {
+            background: #f1f5f9;
+        }
+
+        .painel-mapa {
+            display: none;
+            position: fixed;
+            top: 65px;
+            left: 15px;
+            width: 320px;
+            max-width: calc(100vw - 30px);
+            max-height: 75vh;
+            overflow-y: auto;
+            background: #ffffff;
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+            z-index: 9999;
+            font-family: Arial, sans-serif;
+            color: #222222;
+        }
+
+        .painel-mapa h3 {
+            margin: 0 0 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eeeeee;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .fechar-painel {
+            float: right;
+            border: none;
+            background: transparent;
+            font-size: 22px;
+            cursor: pointer;
+            color: #777777;
+        }
+
+        /* INSTRUÇÕES */
+
+        .item-rota {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 4px;
+            border-bottom: 1px solid #eeeeee;
+            font-size: 13px;
+        }
+
+        .icone-rota {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f1f3f5;
+            color: #333333;
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .conteudo-rota {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conteudo-rota b {
+            display: block;
+            font-size: 14px;
+            color: #222222;
+            line-height: 1.4;
+        }
+
+        .detalhe-rota {
+            margin: 4px 0;
+            color: #666666;
+            font-size: 12px;
+        }
+
+        .distancia-rota {
+            display: inline-block;
+            margin-top: 4px;
+            color: #777777;
+            font-size: 11px;
+        }
+
+        .item-rota.destaque {
+            background: #f4f7ff;
+            border: 1px solid #dce6ff;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        .item-rota.destaque .icone-rota {
+            background: #2563eb;
+            color: white;
+        }
+
+        .item-rota.destaque small {
+            display: block;
+            color: #2563eb;
+            font-size: 10px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        /* CLIMA */
+
+        .item-clima {
+            padding: 8px 0;
+            font-size: 13px;
+        }
+
+        .item-clima p {
+            margin: 12px 0;
+            color: #444444;
+        }
+
+        @media (max-width: 600px) {
+            .painel-mapa {
+                width: calc(100vw - 30px);
+                max-height: 65vh;
+            }
+        }
+
+    </style>
+
+    <!-- Botões de controle -->
+    <div class="controles-mapa">
+
+        <button class="botao-mapa"
+                onclick="alternarPainel('painel-instrucoes')">
+            ☰ Instruções
+        </button>
+
+        <button class="botao-mapa"
+                onclick="alternarPainel('painel-clima')">
+            🌤 Clima
+        </button>
+
+        <button class="botao-mapa"
+                onclick="alternarPainel('painel-previsao')">
+            📊 Previsão
+        </button>
+
+    </div>
+
+    <!-- Painel de instruções -->
+    <div id="painel-instrucoes" class="painel-mapa">
+
+        <button class="fechar-painel"
+                onclick="fecharPaineis()">
+            ×
+        </button>
+
         <h3>Instruções da rota</h3>
-    <p><b>Iniciar trajeto</b><br>Rua Almirante Gonçalves — 80 metros</p><hr><p><b>Virar</b><br>Rua Piquiri — 156 metros</p><hr><p><b>Virar</b><br>Rua Brasílio Itiberê — 1838 metros</p><hr><p><b>Virar</b><br>Avenida Doutor Dario Lopes dos Santos — 604 metros</p><hr><p><b>Fim da rua</b><br>Rua Engenheiro Ostoja Roguski — 60 metros</p><hr><p><b>Continuar</b><br>Avenida Prefeito Maurício Fruet — 513 metros</p><hr><p><b>Chegada</b><br>Avenida Prefeito Maurício Fruet — 0 metros</p><hr></div>
+
+        
+                <div class="item-rota">
+                    <div class="conteudo-rota">
+                        <b>Inicie o trajeto à esquerda</b>
+                        <span class="distancia-rota">
+                            70 metros
+                        </span>
+                    </div>
+                </div>
+            
+                <div class="item-rota">
+                    <div class="conteudo-rota">
+                        <b>Vire à esquerda</b>
+                        <span class="distancia-rota">
+                            582 metros
+                        </span>
+                    </div>
+                </div>
+            
+                <div class="item-rota">
+                    <div class="conteudo-rota">
+                        <b>Vire levemente à direita</b>
+                        <span class="distancia-rota">
+                            647 metros
+                        </span>
+                    </div>
+                </div>
+            
+                <div class="item-rota">
+                    <div class="conteudo-rota">
+                        <b>Na bifurcação levemente à esquerda</b>
+                        <span class="distancia-rota">
+                            635 metros
+                        </span>
+                    </div>
+                </div>
+            
+                <div class="item-rota">
+                    <div class="conteudo-rota">
+                        <b>Continue pela via em frente</b>
+                        <span class="distancia-rota">
+                            116 metros
+                        </span>
+                    </div>
+                </div>
+            
+                <div class="item-rota">
+                    <div class="conteudo-rota">
+                        <b>Vire à esquerda</b>
+                        <span class="distancia-rota">
+                            97 metros
+                        </span>
+                    </div>
+                </div>
+            
+                <div class="item-rota">
+                    <div class="conteudo-rota">
+                        <b>Vire à esquerda</b>
+                        <span class="distancia-rota">
+                            85 metros
+                        </span>
+                    </div>
+                </div>
+            
+                <div class="item-rota">
+                    <div class="conteudo-rota">
+                        <b>Você chegou ao destino</b>
+                        <span class="distancia-rota">
+                            0 metros
+                        </span>
+                    </div>
+                </div>
+            
+
+    </div>
+
+    <!-- Painel climático -->
+    <div id="painel-clima" class="painel-mapa">
+
+        <button class="fechar-painel"
+                onclick="fecharPaineis()">
+            ×
+        </button>
+
+        <h3>🌤️ Clima da rota</h3>
+
+        
+            <div class="item-clima">
+
+                <p>🌡️ Temperatura média: <b>24.6 °C</b></p>
+
+                <p>🌧️ Chuva média: <b>0.2 mm</b></p>
+
+                <p>☔ Probabilidade média: <b>52%</b></p>
+
+                <p>💨 Vento médio: <b>8.0 km/h</b></p>
+
+                <p>🌤️ Condição predominante:
+                    <b>Garoa moderada</b>
+                </p>
+
+            </div>
+        
+
+    </div>
+
+    <!-- Painel de previsão -->
+    <div id="painel-previsao" class="painel-mapa">
+
+        <button class="fechar-painel"
+                onclick="fecharPaineis()">
+            ×
+        </button>
+
+        <h3>📊 Previsão da viagem</h3>
+
+        
+        <div class="item-clima">
+
+            <p>🕒 Saída estimada:
+                <b>14/11/2026 16:56</b>
+            </p>
+
+            <p>🏁 Chegada estimada:
+                <b>14/11/2026 17:00</b>
+            </p>
+
+            <p>🚗 Duração estimada:
+                <b>4 minutos</b>
+            </p>
+
+            <p>📍 Distância total:
+                <b>2.23 km</b>
+            </p>
+
+        </div>
     
-            <div class="folium-map" id="map_64fb9266e444481f06796f00f247f405" ></div>
+
+    </div>
+
+    <!-- Controle dos painéis -->
+    <script>
+
+                function fecharPaineis() {
+
+            document.getElementById(
+                'painel-instrucoes'
+            ).style.display = 'none';
+
+            document.getElementById(
+                'painel-clima'
+            ).style.display = 'none';
+
+            document.getElementById(
+                'painel-previsao'
+            ).style.display = 'none';
+
+        }
+
+        function alternarPainel(id) {
+
+            const painel = document.getElementById(id);
+
+            const estavaAberto = painel.style.display === 'block';
+
+            fecharPaineis();
+
+            if (!estavaAberto) {
+                painel.style.display = 'block';
+            }
+
+        }
+
+    </script>
+    
+    
+            <div class="folium-map" id="map_585eef5ad9b92b63a72f2e89bbc4aee3" ></div>
         
 </body>
 <script>
     
     
-            var map_64fb9266e444481f06796f00f247f405 = L.map(
-                "map_64fb9266e444481f06796f00f247f405",
+            var map_585eef5ad9b92b63a72f2e89bbc4aee3 = L.map(
+                "map_585eef5ad9b92b63a72f2e89bbc4aee3",
                 {
-                    center: [-25.445, -49.26],
+                    center: [-25.46, -49.29],
                     crs: L.CRS.EPSG3857,
                     ...{
   "zoom": 13,
@@ -90,13 +440,13 @@
 
                 }
             );
-            L.control.zoom( { position: "topright" } ).addTo(map_64fb9266e444481f06796f00f247f405);
+            L.control.zoom( { position: "topright" } ).addTo(map_585eef5ad9b92b63a72f2e89bbc4aee3);
 
             
 
         
     
-            var tile_layer_1b7691005ff6fefd4e0b5a95779782aa = L.tileLayer(
+            var tile_layer_081938f9974045a74be805361d47a62c = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -113,17 +463,17 @@
             );
         
     
-            tile_layer_1b7691005ff6fefd4e0b5a95779782aa.addTo(map_64fb9266e444481f06796f00f247f405);
+            tile_layer_081938f9974045a74be805361d47a62c.addTo(map_585eef5ad9b92b63a72f2e89bbc4aee3);
         
     
-            var marker_f7e6934dc548d985193d358d3513ca9e = L.marker(
-                [-25.445, -49.26],
+            var marker_3e5b739114e5f648a8bd80e6fb1e6f01 = L.marker(
+                [-25.46, -49.29],
                 {
 }
-            ).addTo(map_64fb9266e444481f06796f00f247f405);
+            ).addTo(map_585eef5ad9b92b63a72f2e89bbc4aee3);
         
     
-            var icon_a210b420d2d7c0ad3c999c00d1fb45cd = L.AwesomeMarkers.icon(
+            var icon_179f5c32109815538c330567a0b99015 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "green",
   "iconColor": "white",
@@ -134,24 +484,24 @@
             );
         
     
-        var popup_f9a11bbf9332fb4cffd7b37c31751601 = L.popup({
+        var popup_07ee91ec30b8baf7be81de90ace00350 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_6b656e41a26dd5ca49348d8544ca842b = $(`<div id="html_6b656e41a26dd5ca49348d8544ca842b" style="width: 100.0%; height: 100.0%;">Centro de Curitiba</div>`)[0];
-                popup_f9a11bbf9332fb4cffd7b37c31751601.setContent(html_6b656e41a26dd5ca49348d8544ca842b);
+                var html_5271f295a22a288e11bc825f9ec472f3 = $(`<div id="html_5271f295a22a288e11bc825f9ec472f3" style="width: 100.0%; height: 100.0%;">Centro de Curitiba</div>`)[0];
+                popup_07ee91ec30b8baf7be81de90ace00350.setContent(html_5271f295a22a288e11bc825f9ec472f3);
             
         
 
-        marker_f7e6934dc548d985193d358d3513ca9e.bindPopup(popup_f9a11bbf9332fb4cffd7b37c31751601)
+        marker_3e5b739114e5f648a8bd80e6fb1e6f01.bindPopup(popup_07ee91ec30b8baf7be81de90ace00350)
         ;
 
         
     
     
-            marker_f7e6934dc548d985193d358d3513ca9e.bindTooltip(
+            marker_3e5b739114e5f648a8bd80e6fb1e6f01.bindTooltip(
                 `<div>
                      Partida
                  </div>`,
@@ -161,17 +511,17 @@
             );
         
     
-                marker_f7e6934dc548d985193d358d3513ca9e.setIcon(icon_a210b420d2d7c0ad3c999c00d1fb45cd);
+                marker_3e5b739114e5f648a8bd80e6fb1e6f01.setIcon(icon_179f5c32109815538c330567a0b99015);
             
     
-            var marker_c53653df25afc2ba0d27c9ae37f32f95 = L.marker(
-                [-25.442, -49.235],
+            var marker_c9e9073345478ceff4d9d4bf313f5e0a = L.marker(
+                [-25.475, -49.295],
                 {
 }
-            ).addTo(map_64fb9266e444481f06796f00f247f405);
+            ).addTo(map_585eef5ad9b92b63a72f2e89bbc4aee3);
         
     
-            var icon_7f2e141ff3c0dfd35cad9ba21fb26883 = L.AwesomeMarkers.icon(
+            var icon_55d28abc027d5b3a3d3d5bfa39285d8d = L.AwesomeMarkers.icon(
                 {
   "markerColor": "red",
   "iconColor": "white",
@@ -182,24 +532,24 @@
             );
         
     
-        var popup_d4beb34fce3d9da681d7182ed16c719c = L.popup({
+        var popup_c690b2fbe7fcfc52b9b70b8a939203c9 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_a1db8dfc9aabc16269ffe8acb1d04745 = $(`<div id="html_a1db8dfc9aabc16269ffe8acb1d04745" style="width: 100.0%; height: 100.0%;">Batel, Curitiba</div>`)[0];
-                popup_d4beb34fce3d9da681d7182ed16c719c.setContent(html_a1db8dfc9aabc16269ffe8acb1d04745);
+                var html_975ce94dfbe4358ad7176166bc25e48c = $(`<div id="html_975ce94dfbe4358ad7176166bc25e48c" style="width: 100.0%; height: 100.0%;">Batel, Curitiba</div>`)[0];
+                popup_c690b2fbe7fcfc52b9b70b8a939203c9.setContent(html_975ce94dfbe4358ad7176166bc25e48c);
             
         
 
-        marker_c53653df25afc2ba0d27c9ae37f32f95.bindPopup(popup_d4beb34fce3d9da681d7182ed16c719c)
+        marker_c9e9073345478ceff4d9d4bf313f5e0a.bindPopup(popup_c690b2fbe7fcfc52b9b70b8a939203c9)
         ;
 
         
     
     
-            marker_c53653df25afc2ba0d27c9ae37f32f95.bindTooltip(
+            marker_c9e9073345478ceff4d9d4bf313f5e0a.bindTooltip(
                 `<div>
                      Chegada
                  </div>`,
@@ -209,17 +559,17 @@
             );
         
     
-                marker_c53653df25afc2ba0d27c9ae37f32f95.setIcon(icon_7f2e141ff3c0dfd35cad9ba21fb26883);
+                marker_c9e9073345478ceff4d9d4bf313f5e0a.setIcon(icon_55d28abc027d5b3a3d3d5bfa39285d8d);
             
     
-            var poly_line_05f4eb42ab360c00d73510d6283594a0 = L.polyline(
-                [[-25.44514, -49.259932], [-25.445427, -49.260658], [-25.445405, -49.260668], [-25.444198, -49.261251], [-25.444134, -49.261282], [-25.443685, -49.260106], [-25.443646, -49.260004], [-25.443606, -49.259899], [-25.443506, -49.259638], [-25.443478, -49.259565], [-25.443438, -49.25946], [-25.443403, -49.259367], [-25.443306, -49.259112], [-25.442994, -49.258295], [-25.442462, -49.256902], [-25.442446, -49.256861], [-25.442217, -49.256261], [-25.44213, -49.256032], [-25.44174, -49.25501], [-25.441487, -49.254347], [-25.441449, -49.254249], [-25.441313, -49.253891], [-25.441291, -49.253834], [-25.441278, -49.253801], [-25.441242, -49.253707], [-25.441172, -49.253523], [-25.440774, -49.252479], [-25.440738, -49.252386], [-25.440715, -49.252326], [-25.440656, -49.252167], [-25.440613, -49.252061], [-25.440176, -49.250975], [-25.439869, -49.250211], [-25.439742, -49.249896], [-25.439716, -49.249832], [-25.439661, -49.249694], [-25.439634, -49.249628], [-25.439588, -49.249514], [-25.439153, -49.24843], [-25.438771, -49.247481], [-25.438392, -49.246538], [-25.437924, -49.245376], [-25.437574, -49.244504], [-25.437737, -49.244149], [-25.438001, -49.243574], [-25.438114, -49.243313], [-25.438151, -49.243218], [-25.438187, -49.24311], [-25.438228, -49.242964], [-25.438467, -49.24207], [-25.438517, -49.241877], [-25.438804, -49.24077], [-25.438827, -49.240704], [-25.438856, -49.240642], [-25.438888, -49.240588], [-25.438926, -49.240533], [-25.439867, -49.239279], [-25.439933, -49.23919], [-25.439879, -49.239129], [-25.439665, -49.238886], [-25.439559, -49.238764], [-25.439509, -49.238633], [-25.43949, -49.238561], [-25.439475, -49.238468], [-25.439468, -49.23839], [-25.439467, -49.238324], [-25.439468, -49.238267], [-25.439475, -49.238194], [-25.439486, -49.238138], [-25.439507, -49.238066], [-25.439529, -49.23801], [-25.439561, -49.237953], [-25.439597, -49.2379], [-25.439642, -49.237845], [-25.439686, -49.237799], [-25.43974, -49.237752], [-25.440695, -49.237049], [-25.440878, -49.236911], [-25.441078, -49.236758], [-25.441397, -49.236504], [-25.441513, -49.236407], [-25.441599, -49.236326], [-25.441694, -49.236222], [-25.441775, -49.236115], [-25.441848, -49.236001], [-25.441911, -49.235885], [-25.44197, -49.235756], [-25.442017, -49.235617], [-25.442048, -49.235492], [-25.442072, -49.235365], [-25.442086, -49.235244], [-25.442105, -49.23501]],
+            var poly_line_2be2672fff245a43558568e9a18ae8da = L.polyline(
+                [[-25.45974, -49.289964], [-25.459593, -49.290643], [-25.460732, -49.290885], [-25.461864, -49.291128], [-25.462914, -49.291357], [-25.46373, -49.291566], [-25.464011, -49.291637], [-25.464198, -49.291683], [-25.464704, -49.291837], [-25.464734, -49.291846], [-25.464885, -49.291956], [-25.465008, -49.292079], [-25.465205, -49.292305], [-25.465419, -49.292574], [-25.465913, -49.293275], [-25.466198, -49.293706], [-25.466891, -49.29475], [-25.466962, -49.294837], [-25.467111, -49.295017], [-25.467205, -49.295117], [-25.467306, -49.295204], [-25.467381, -49.295259], [-25.467596, -49.295361], [-25.467954, -49.295457], [-25.468259, -49.29553], [-25.468645, -49.295626], [-25.469074, -49.295704], [-25.469246, -49.295657], [-25.470021, -49.295487], [-25.470078, -49.29547], [-25.470351, -49.295414], [-25.47076, -49.295257], [-25.471022, -49.295216], [-25.471321, -49.295216], [-25.471667, -49.295217], [-25.471941, -49.295228], [-25.472355, -49.295288], [-25.472591, -49.295347], [-25.472637, -49.295359], [-25.472894, -49.295449], [-25.473559, -49.29574], [-25.473762, -49.295805], [-25.474035, -49.295816], [-25.474498, -49.29581], [-25.474554, -49.295805], [-25.474666, -49.295794], [-25.475714, -49.295769], [-25.475712, -49.29564], [-25.475707, -49.295308], [-25.4757, -49.294899], [-25.475699, -49.294807], [-25.475088, -49.295118], [-25.475064, -49.29511], [-25.47505, -49.295088], [-25.47505, -49.295061], [-25.475061, -49.295042]],
                 {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 6}
-            ).addTo(map_64fb9266e444481f06796f00f247f405);
+            ).addTo(map_585eef5ad9b92b63a72f2e89bbc4aee3);
         
     
-            map_64fb9266e444481f06796f00f247f405.fitBounds(
-                [[-25.44514, -49.259932], [-25.445427, -49.260658], [-25.445405, -49.260668], [-25.444198, -49.261251], [-25.444134, -49.261282], [-25.443685, -49.260106], [-25.443646, -49.260004], [-25.443606, -49.259899], [-25.443506, -49.259638], [-25.443478, -49.259565], [-25.443438, -49.25946], [-25.443403, -49.259367], [-25.443306, -49.259112], [-25.442994, -49.258295], [-25.442462, -49.256902], [-25.442446, -49.256861], [-25.442217, -49.256261], [-25.44213, -49.256032], [-25.44174, -49.25501], [-25.441487, -49.254347], [-25.441449, -49.254249], [-25.441313, -49.253891], [-25.441291, -49.253834], [-25.441278, -49.253801], [-25.441242, -49.253707], [-25.441172, -49.253523], [-25.440774, -49.252479], [-25.440738, -49.252386], [-25.440715, -49.252326], [-25.440656, -49.252167], [-25.440613, -49.252061], [-25.440176, -49.250975], [-25.439869, -49.250211], [-25.439742, -49.249896], [-25.439716, -49.249832], [-25.439661, -49.249694], [-25.439634, -49.249628], [-25.439588, -49.249514], [-25.439153, -49.24843], [-25.438771, -49.247481], [-25.438392, -49.246538], [-25.437924, -49.245376], [-25.437574, -49.244504], [-25.437737, -49.244149], [-25.438001, -49.243574], [-25.438114, -49.243313], [-25.438151, -49.243218], [-25.438187, -49.24311], [-25.438228, -49.242964], [-25.438467, -49.24207], [-25.438517, -49.241877], [-25.438804, -49.24077], [-25.438827, -49.240704], [-25.438856, -49.240642], [-25.438888, -49.240588], [-25.438926, -49.240533], [-25.439867, -49.239279], [-25.439933, -49.23919], [-25.439879, -49.239129], [-25.439665, -49.238886], [-25.439559, -49.238764], [-25.439509, -49.238633], [-25.43949, -49.238561], [-25.439475, -49.238468], [-25.439468, -49.23839], [-25.439467, -49.238324], [-25.439468, -49.238267], [-25.439475, -49.238194], [-25.439486, -49.238138], [-25.439507, -49.238066], [-25.439529, -49.23801], [-25.439561, -49.237953], [-25.439597, -49.2379], [-25.439642, -49.237845], [-25.439686, -49.237799], [-25.43974, -49.237752], [-25.440695, -49.237049], [-25.440878, -49.236911], [-25.441078, -49.236758], [-25.441397, -49.236504], [-25.441513, -49.236407], [-25.441599, -49.236326], [-25.441694, -49.236222], [-25.441775, -49.236115], [-25.441848, -49.236001], [-25.441911, -49.235885], [-25.44197, -49.235756], [-25.442017, -49.235617], [-25.442048, -49.235492], [-25.442072, -49.235365], [-25.442086, -49.235244], [-25.442105, -49.23501]],
+            map_585eef5ad9b92b63a72f2e89bbc4aee3.fitBounds(
+                [[-25.45974, -49.289964], [-25.459593, -49.290643], [-25.460732, -49.290885], [-25.461864, -49.291128], [-25.462914, -49.291357], [-25.46373, -49.291566], [-25.464011, -49.291637], [-25.464198, -49.291683], [-25.464704, -49.291837], [-25.464734, -49.291846], [-25.464885, -49.291956], [-25.465008, -49.292079], [-25.465205, -49.292305], [-25.465419, -49.292574], [-25.465913, -49.293275], [-25.466198, -49.293706], [-25.466891, -49.29475], [-25.466962, -49.294837], [-25.467111, -49.295017], [-25.467205, -49.295117], [-25.467306, -49.295204], [-25.467381, -49.295259], [-25.467596, -49.295361], [-25.467954, -49.295457], [-25.468259, -49.29553], [-25.468645, -49.295626], [-25.469074, -49.295704], [-25.469246, -49.295657], [-25.470021, -49.295487], [-25.470078, -49.29547], [-25.470351, -49.295414], [-25.47076, -49.295257], [-25.471022, -49.295216], [-25.471321, -49.295216], [-25.471667, -49.295217], [-25.471941, -49.295228], [-25.472355, -49.295288], [-25.472591, -49.295347], [-25.472637, -49.295359], [-25.472894, -49.295449], [-25.473559, -49.29574], [-25.473762, -49.295805], [-25.474035, -49.295816], [-25.474498, -49.29581], [-25.474554, -49.295805], [-25.474666, -49.295794], [-25.475714, -49.295769], [-25.475712, -49.29564], [-25.475707, -49.295308], [-25.4757, -49.294899], [-25.475699, -49.294807], [-25.475088, -49.295118], [-25.475064, -49.29511], [-25.47505, -49.295088], [-25.47505, -49.295061], [-25.475061, -49.295042]],
                 {}
             );
         
