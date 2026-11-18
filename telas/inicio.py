@@ -1,8 +1,11 @@
 
 import gradio as gr
 
+<<<<<<< HEAD
 from telas.botoes import criar_botao
 
+=======
+>>>>>>> 0b5b2d468018a7c962ca3bef17a315f5cfab7d95
 # responsável por construir a tela inicial
 def criar_tela_inicio():
 
@@ -16,6 +19,7 @@ def criar_tela_inicio():
         "e acompanhe a previsão do tempo."
     )
 
+<<<<<<< HEAD
     botao_entregas = criar_botao("""
         <button type="button" class="botao-entregas">
             <span>Ver Entregas</span>
@@ -26,5 +30,11 @@ def criar_tela_inicio():
             </svg>
         </button>
     """)
+=======
+    botao_entregas = gr.Button(
+        "Ver Entregas",
+        variant="primary"
+    )
+>>>>>>> 0b5b2d468018a7c962ca3bef17a315f5cfab7d95
 
     return botao_entregas

@@ -6,16 +6,26 @@ from servicos.clima import consultar_clima_medio
 from datetime import datetime, timedelta
 
 
+<<<<<<< HEAD
 # coordenadas para criar e testar o mapa
 def criar_mapa(origem=None, destino=None):
 
+=======
+def criar_mapa(origem=None, destino=None):
+
+    # Coordenadas padrão para testar o mapa
+>>>>>>> 0b5b2d468018a7c962ca3bef17a315f5cfab7d95
     if origem is None:
         origem = [-25.4284, -49.2733]
 
     if destino is None:
         destino = [-25.4417, -49.2900]
 
+<<<<<<< HEAD
     # comonicaçao com a api
+=======
+    # Endereço da API OSRM
+>>>>>>> 0b5b2d468018a7c962ca3bef17a315f5cfab7d95
     url = (
         "https://router.project-osrm.org/route/v1/driving/"
         f"{origem[1]},{origem[0]};"
@@ -23,12 +33,17 @@ def criar_mapa(origem=None, destino=None):
         "?overview=full&geometries=geojson&steps=true"
     )
 
+<<<<<<< HEAD
     # realizando a requisição api 
     
+=======
+    # Consultando a API
+>>>>>>> 0b5b2d468018a7c962ca3bef17a315f5cfab7d95
     resposta = requests.get(url, timeout=15)
     resposta.raise_for_status()
     dados = resposta.json()
 
+<<<<<<< HEAD
 
     if dados.get("code") != "Ok" or not dados.get("routes"):
         raise ValueError("Não foi possível calcular a rota.")
@@ -37,19 +52,38 @@ def criar_mapa(origem=None, destino=None):
     rota = dados["routes"][0]
 
     # converte as coordenadas para o formato do Folium
+=======
+    if dados.get("code") != "Ok" or not dados.get("routes"):
+        raise ValueError("Não foi possível calcular a rota.")
+
+    # Pegando a primeira rota encontrada
+    rota = dados["routes"][0]
+
+    # Convertendo coordenadas para o formato do Folium
+>>>>>>> 0b5b2d468018a7c962ca3bef17a315f5cfab7d95
     coordenadas = [
         [latitude, longitude]
         for longitude, latitude in rota["geometry"]["coordinates"]
     ]
 
+<<<<<<< HEAD
     # cria o mapa em folium
+=======
+    # Criando o mapa
+>>>>>>> 0b5b2d468018a7c962ca3bef17a315f5cfab7d95
     mapa = folium.Map(
         location=origem,
         zoom_start=13,
         zoom_control="topright"
     )
 
+<<<<<<< HEAD
     # instruçoes 
+=======
+    # =====================================
+    # INSTRUÇÕES DA ROTA
+    # =====================================
+>>>>>>> 0b5b2d468018a7c962ca3bef17a315f5cfab7d95
 
     instrucoes_html = ""
 
@@ -390,6 +424,7 @@ def criar_mapa(origem=None, destino=None):
             }}
         }}
 
+<<<<<<< HEAD
         @media (max-width: 360px) {{
             .controles-mapa {{
                 top: auto;
@@ -416,6 +451,8 @@ def criar_mapa(origem=None, destino=None):
             }}
         }}
 
+=======
+>>>>>>> 0b5b2d468018a7c962ca3bef17a315f5cfab7d95
     </style>
 
     <!-- Botões de controle -->

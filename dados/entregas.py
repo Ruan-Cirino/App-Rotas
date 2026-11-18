@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
 #Entregas salvas no vetor
+=======
+# Vetor com as cinco entregas fictícias
+>>>>>>> 0b5b2d468018a7c962ca3bef17a315f5cfab7d95
 entregas = [
     {
         "id": 1,

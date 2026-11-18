@@ -1,9 +1,14 @@
 
+<<<<<<< HEAD
 from pathlib import Path
 
 import gradio as gr
 
 from telas.botoes import criar_botao
+=======
+import gradio as gr
+
+>>>>>>> 0b5b2d468018a7c962ca3bef17a315f5cfab7d95
 from telas.inicio import criar_tela_inicio
 from telas.entregas import criar_tela_entregas
 from telas.rotas import criar_tela_rota, carregar_mapa
@@ -13,6 +18,7 @@ from telas.rotas import criar_tela_rota, carregar_mapa
 with gr.Blocks(title="MotoRoute") as app:
 
     # Tela inicial
+<<<<<<< HEAD
     with gr.Column(elem_classes=["tela-app", "tela-inicio"], min_width=0) as tela_inicio:
         botao_entregas = criar_tela_inicio()
 
@@ -30,6 +36,18 @@ with gr.Blocks(title="MotoRoute") as app:
     with gr.Column(
         visible=False, elem_classes=["tela-app", "tela-rota"], min_width=0
     ) as tela_rota:
+=======
+    with gr.Column(visible=True) as tela_inicio:
+        botao_entregas = criar_tela_inicio()
+
+    # Tela de entregas
+    with gr.Column(visible=False) as tela_entregas:
+        lista_entregas = criar_tela_entregas()
+        botao_voltar_inicio = gr.Button("Voltar")
+
+    # Tela da rota
+    with gr.Column(visible=False) as tela_rota:
+>>>>>>> 0b5b2d468018a7c962ca3bef17a315f5cfab7d95
         mapa, botao_voltar_entregas = criar_tela_rota()
 
     # Abrir a tela de entregas
@@ -93,4 +111,8 @@ with gr.Blocks(title="MotoRoute") as app:
 
 # Iniciando o aplicativo
 if __name__ == "__main__":
+<<<<<<< HEAD
     app.launch(css_paths=Path(__file__).with_name("estilos.css"))
+=======
+    app.launch()
+>>>>>>> 0b5b2d468018a7c962ca3bef17a315f5cfab7d95
