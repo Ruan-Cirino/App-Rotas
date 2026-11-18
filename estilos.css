@@ -1,0 +1,288 @@
+.tela-app {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 40rem;
+    margin: clamp(0.5rem, 2vw, 1.5rem) auto;
+    padding: clamp(1rem, 3vw, 2rem);
+    background: var(--block-background-fill);
+    border: 1px solid var(--border-color-primary);
+    border-radius: 1rem;
+}
+
+.tela-inicio {
+    text-align: center;
+}
+
+.tela-rota {
+    max-width: 56rem;
+}
+
+.tela-inicio .acao-tela {
+    margin-top: 0.25rem;
+}
+
+.mapa-rota iframe {
+    display: block;
+    width: 100%;
+    height: clamp(280px, 57vh, 560px);
+    height: clamp(280px, 57svh, 560px);
+    border: 0;
+    border-radius: 0.75rem;
+}
+
+button:where(.botao-entregas, .botao-voltar, .botao-voltar-entregas) {
+    position: relative;
+    min-height: 48px;
+    max-width: 100%;
+    border: 0;
+    background: transparent;
+    color: var(--body-text-color, #282936);
+    font: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.25;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+button:where(.botao-entregas, .botao-voltar, .botao-voltar-entregas):focus-visible {
+    outline: 2px solid var(--body-text-color, #282936);
+    outline-offset: 4px;
+}
+
+/* Estilo Botão */
+button.botao-entregas {
+    --entregas-fundo: #c81048;
+    --entregas-fundo-hover: #d51250;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.55em 1.1em;
+    border-radius: 999px;
+    background: var(--entregas-fundo);
+    color: #fff;
+    box-shadow: 0 0 0.2em var(--entregas-fundo);
+    transition: transform 0.2s, box-shadow 0.5s;
+}
+
+button.botao-entregas::after {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    content: "";
+}
+
+button.botao-entregas:active {
+    transform: scale(0.95);
+}
+
+button.botao-entregas span {
+    transition: text-shadow 0.5s;
+}
+
+button.botao-entregas svg {
+    flex: none;
+    width: 1.65em;
+    height: 0.8em;
+    overflow: visible;
+    fill: currentColor;
+    transition: transform 0.5s, filter 0.5s;
+}
+
+button.botao-entregas polygon:nth-child(1) {
+    transform: translateX(-28%);
+    transition: transform 0.4s;
+}
+
+button.botao-entregas polygon:nth-child(2) {
+    transform: translateX(-14%);
+    transition: transform 0.5s;
+}
+
+@keyframes entregas-brilho {
+    50% { background: var(--entregas-fundo-hover); }
+}
+
+@keyframes entregas-onda {
+    from { box-shadow: 0 0 0 0 #ff145a55; }
+    to { box-shadow: 0 0 0 0.4em #ff145a00; }
+}
+
+@keyframes entregas-seta {
+    50% { opacity: 0.2; }
+}
+
+/* Estilo Botão 2 */
+button.botao-voltar {
+    display: inline-flex;
+    align-items: center;
+    width: 9rem;
+    padding: 0;
+}
+
+button.botao-voltar .circle {
+    position: relative;
+    display: block;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 999px;
+    background: #282936;
+    box-shadow: inset 0 0 0 1px #ffffff66;
+    transition: width 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+}
+
+button.botao-voltar .arrow {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    width: 1rem;
+    height: 0.125rem;
+    transform: translateY(-50%);
+    background: #fff;
+    transition: transform 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+}
+
+button.botao-voltar .arrow::before {
+    position: absolute;
+    top: -0.25rem;
+    left: 0;
+    width: 0.625rem;
+    height: 0.625rem;
+    border-bottom: 0.125rem solid #fff;
+    border-left: 0.125rem solid #fff;
+    transform: rotate(45deg);
+    content: "";
+}
+
+button.botao-voltar .button-text {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding-left: 3rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: color 0.45s cubic-bezier(0.65, 0, 0.076, 1);
+}
+
+/* Estilo Botão 3 */
+button.botao-voltar-entregas {
+    display: inline-grid;
+    grid-template-columns: auto 1.25em;
+    align-items: center;
+    gap: 0.5em;
+    overflow: hidden;
+    padding: 0.5em 0.375em;
+}
+
+button.botao-voltar-entregas::before {
+    position: absolute;
+    inset: auto 0 0;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.25s ease-out;
+    content: "";
+}
+
+button.botao-voltar-entregas :is(.text, .clone) {
+    display: flex;
+    grid-area: 1 / 1;
+    gap: 0.25em;
+    white-space: nowrap;
+}
+
+button.botao-voltar-entregas :is(.text, .clone) > span {
+    transition: transform 0.2s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+button.botao-voltar-entregas .clone > span {
+    transform: translateY(3.5rem);
+}
+
+button.botao-voltar-entregas svg {
+    grid-area: 1 / 2;
+    width: 1.25em;
+    height: 1.25em;
+    transform: rotate(-50deg);
+    transition: transform 0.2s ease-out;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    button.botao-entregas:hover {
+        box-shadow: 0 0 0.75em var(--entregas-fundo);
+        animation: entregas-brilho 1s infinite;
+    }
+
+    button.botao-entregas:hover::after {
+        animation: entregas-onda 1s linear infinite;
+    }
+
+    button.botao-entregas:hover span {
+        text-shadow: 2px 2px 3px #00000040;
+    }
+
+    button.botao-entregas:hover svg {
+        transform: translateX(0.15em);
+        filter: drop-shadow(2px 2px 2px #00000040);
+    }
+
+    button.botao-entregas:hover polygon {
+        transform: translateX(0);
+        animation: entregas-seta 1s infinite;
+    }
+
+    button.botao-entregas:hover polygon:nth-child(1) { animation-delay: 0.6s; }
+    button.botao-entregas:hover polygon:nth-child(2) { animation-delay: 0.4s; }
+    button.botao-entregas:hover polygon:nth-child(3) { animation-delay: 0.2s; }
+
+    button.botao-voltar:hover .circle {
+        width: 100%;
+    }
+
+    button.botao-voltar:hover .arrow {
+        transform: translate(-0.2rem, -50%);
+    }
+
+    button.botao-voltar:hover .button-text {
+        color: #fff;
+    }
+
+    button.botao-voltar-entregas:hover::before {
+        transform: scaleX(1);
+        transform-origin: left;
+    }
+
+    button.botao-voltar-entregas:hover .text > span {
+        transform: translateY(-3.5rem);
+    }
+
+    button.botao-voltar-entregas:hover .clone > span {
+        transform: translateY(0);
+    }
+
+    button.botao-voltar-entregas:hover .clone > :nth-child(1) { transition-delay: 0.1s; }
+    button.botao-voltar-entregas:hover .clone > :nth-child(2) { transition-delay: 0.15s; }
+    button.botao-voltar-entregas:hover .clone > :nth-child(3) { transition-delay: 0.2s; }
+
+    button.botao-voltar-entregas:hover svg {
+        transform: rotate(-90deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    button.botao-entregas:active {
+        transform: none;
+    }
+
+    button:where(.botao-entregas, .botao-voltar, .botao-voltar-entregas),
+    button:where(.botao-entregas, .botao-voltar, .botao-voltar-entregas)::before,
+    button.botao-entregas::after,
+    button:where(.botao-entregas, .botao-voltar, .botao-voltar-entregas) * {
+        animation: none;
+        transition: none;
+    }
+}
