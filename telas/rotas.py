@@ -3,10 +3,7 @@ import gradio as gr
 from html import escape
 
 from servicos.mapas import criar_mapa
-<<<<<<< HEAD
 from telas.botoes import criar_botao
-=======
->>>>>>> 0b5b2d468018a7c962ca3bef17a315f5cfab7d95
 
 
 
@@ -39,11 +36,7 @@ def carregar_mapa(entrega_selecionada):
         srcdoc="{escape(html_mapa, quote=True)}"
         width="100%"
         height="600"
-<<<<<<< HEAD
         title="Mapa da rota"
-=======
-        style="border: none; border-radius: 12px;"
->>>>>>> 0b5b2d468018a7c962ca3bef17a315f5cfab7d95
     ></iframe>
     """
 
@@ -61,7 +54,6 @@ def criar_tela_rota():
 
     # Espaço para exibir o mapa
     mapa = gr.HTML(
-<<<<<<< HEAD
         value="<p>Carregando mapa...</p>",
         elem_classes="mapa-rota"
     )
@@ -78,12 +70,5 @@ def criar_tela_rota():
             </svg>
         </button>
     """)
-=======
-        value="<p>Carregando mapa...</p>"
-    )
-
-    # Botão para voltar
-    botao_voltar = gr.Button("Voltar às entregas")
->>>>>>> 0b5b2d468018a7c962ca3bef17a315f5cfab7d95
 
     return mapa, botao_voltar
